@@ -1,0 +1,10 @@
+<odoo noupdate="1">
+    <record id="seq_brand_kit" model="ir.sequence">
+        <field name="name">Brand Kit</field>
+        <field name="code">brand.kit</field>
+        <field name="prefix">BKT/%(year)s/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False" />
+    </record>
+</odoo>
+

@@ -1,0 +1,11 @@
+<odoo>
+    <menuitem id="menu_brand_kit_root" name="Brand Kit" sequence="10" />
+    <menuitem
+        id="menu_brand_kit"
+        name="Brand Kits"
+        parent="menu_brand_kit_root"
+        action="action_brand_kit"
+        sequence="10"
+    />
+</odoo>
+
