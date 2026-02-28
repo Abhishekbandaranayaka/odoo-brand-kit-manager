@@ -5,6 +5,8 @@
     "category": "Tools",
     "author": "Your Company",
     "license": "LGPL-3",
+    "price": 35.0,
+    "currency": "USD",
     "depends": ["base", "mail", "base_setup"],
     "data": [
         "security/security.xml",
