@@ -35,6 +35,18 @@
                         >
                             <field name="brand_legal_text" widget="html" />
                         </setting>
+                        <setting
+                            id="brand_kit_preview_email_layout_setting"
+                            string="Preview Email Layout"
+                            help="Preview one selected email template with current company brand settings."
+                        >
+                            <button
+                                name="action_open_email_layout_preview"
+                                string="Open Preview Wizard"
+                                type="object"
+                                class="btn-secondary"
+                            />
+                        </setting>
                     </block>
 
                     <block title="Brand Kit (Optional)">

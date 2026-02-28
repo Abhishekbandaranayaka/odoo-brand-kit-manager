@@ -38,4 +38,32 @@
             </form>
         </field>
     </record>
+
+    <record id="view_company_email_layout_preview_wizard_form" model="ir.ui.view">
+        <field name="name">brand.email.layout.preview.wizard.form</field>
+        <field name="model">brand.email.layout.preview.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Email Layout Preview" create="0">
+                <sheet>
+                    <group>
+                        <field name="company_id" />
+                        <field name="template_id" />
+                        <field name="template_model" />
+                    </group>
+                    <label string="Preview the selected template with current company brand settings." />
+                    <notebook>
+                        <page string="Current">
+                            <field name="current_body_html" widget="html" />
+                        </page>
+                        <page string="Branded Preview">
+                            <field name="preview_body_html" widget="html" />
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button string="Close" special="cancel" class="btn-primary" />
+                </footer>
+            </form>
+        </field>
+    </record>
 </odoo>

@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import _, fields, models
 
 
 class ResCompany(models.Model):
@@ -59,3 +59,22 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
         string="Default Brand Kit",
     )
+
+    def action_open_email_layout_preview(self):
+        self.ensure_one()
+        wizard = self.env["brand.email.layout.preview.wizard"].create(
+            {"company_id": self.company_id.id}
+        )
+        view = self.env.ref(
+            "brand_kit_manager.view_company_email_layout_preview_wizard_form",
+            raise_if_not_found=False,
+        )
+        return {
+            "name": _("Email Layout Preview"),
+            "type": "ir.actions.act_window",
+            "res_model": "brand.email.layout.preview.wizard",
+            "res_id": wizard.id,
+            "view_mode": "form",
+            "view_id": view.id if view else False,
+            "target": "new",
+        }
