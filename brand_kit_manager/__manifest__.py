@@ -1,18 +1,19 @@
 {
     "name": "Brand Kit Manager",
     "summary": "Manage company brand kits from a dedicated module",
-    "version": "1.0.0",
+    "version": "19.0.1.0.0",
     "category": "Tools",
     "author": "Your Company",
     "license": "LGPL-3",
-    "depends": ["base", "mail"],
+    "depends": ["base", "mail", "base_setup"],
     "data": [
+        "security/security.xml",
         "security/ir.model.access.csv",
         "data/brand_kit_sequence.xml",
+        "data/default_brand_kit.xml",
         "views/brand_kit_views.xml",
-        "views/brand_kit_menus.xml",
+        "views/res_config_settings_views.xml",
     ],
     "installable": True,
     "application": True,
 }
-

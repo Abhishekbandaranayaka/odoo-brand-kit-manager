@@ -1,0 +1,23 @@
+<odoo>
+    <record id="res_config_settings_view_form_brand_kit" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.brand.kit</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app string="Brand Kit" name="brand_kit_manager" groups="base.group_system">
+                    <block title="Brand Kit Settings">
+                        <setting
+                            id="brand_kit_default_brand_kit_setting"
+                            string="Default Brand Kit"
+                            help="Pick the default brand kit for the current company."
+                        >
+                            <field name="brand_kit_id" options="{'no_create_edit': True}" />
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+

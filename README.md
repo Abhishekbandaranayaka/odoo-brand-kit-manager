@@ -1,10 +1,10 @@
 # Odoo Custom Module Foundation
 
-This repository now contains a starter structure for custom Odoo development.
+This repository contains a starter structure for custom Odoo development.
 
 ## Project Structure
 
-- `custom_addons/brand_kit_manager`: starter custom module
+- `brand_kit_manager`: starter custom module
 - `config/odoo.conf.example`: example Odoo config for local development
 
 ## Quick Start
@@ -23,4 +23,3 @@ The `brand_kit_manager` module includes:
 - Tree, form, and search views
 - Access rights for internal users
 - A sequence for auto-generated references
-
