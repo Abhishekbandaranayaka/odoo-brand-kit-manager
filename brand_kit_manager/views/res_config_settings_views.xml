@@ -6,7 +6,38 @@
         <field name="arch" type="xml">
             <xpath expr="//form" position="inside">
                 <app string="Brand Kit" name="brand_kit_manager" groups="base.group_system">
-                    <block title="Brand Kit Settings">
+                    <block title="Company Brand Settings">
+                        <setting
+                            id="brand_kit_primary_color_setting"
+                            string="Primary Color"
+                            help="Primary brand color for the current company."
+                        >
+                            <field name="brand_primary_color" placeholder="#0B5FFF" />
+                        </setting>
+                        <setting
+                            id="brand_kit_secondary_color_setting"
+                            string="Secondary Color"
+                            help="Secondary brand color for the current company."
+                        >
+                            <field name="brand_secondary_color" placeholder="#F4F6FA" />
+                        </setting>
+                        <setting
+                            id="brand_kit_footer_text_setting"
+                            string="Footer Text"
+                            help="Footer content inserted into branded emails."
+                        >
+                            <field name="brand_footer_text" widget="html" />
+                        </setting>
+                        <setting
+                            id="brand_kit_legal_text_setting"
+                            string="Legal Text"
+                            help="Legal or disclaimer content inserted into branded emails."
+                        >
+                            <field name="brand_legal_text" widget="html" />
+                        </setting>
+                    </block>
+
+                    <block title="Brand Kit (Optional)">
                         <setting
                             id="brand_kit_default_brand_kit_setting"
                             string="Default Brand Kit"
