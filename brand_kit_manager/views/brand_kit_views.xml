@@ -75,7 +75,7 @@
                         </page>
                         <page string="Email Templates" groups="base.group_system">
                             <label
-                                string="Choose templates to update. Only selected templates are modified when you click Apply."
+                                string="Choose templates to apply. Clicking Apply assigns the branded email layout without overwriting template body HTML."
                             />
                             <field name="template_ids" widget="many2many_checkboxes" />
                         </page>

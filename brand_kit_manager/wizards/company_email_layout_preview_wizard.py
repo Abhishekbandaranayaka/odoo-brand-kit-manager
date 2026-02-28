@@ -1,11 +1,8 @@
-from markupsafe import escape
-
 from odoo import api, fields, models
-from odoo.tools import image_data_uri
+from odoo.tools import is_html_empty
 
 
-DEFAULT_PRIMARY_COLOR = "#0B5FFF"
-DEFAULT_SECONDARY_COLOR = "#F4F6FA"
+BRAND_LAYOUT_XMLID = "brand_kit_manager.mail_notification_layout_brand_kit"
 
 
 class CompanyEmailLayoutPreviewWizard(models.TransientModel):
@@ -36,47 +33,39 @@ class CompanyEmailLayoutPreviewWizard(models.TransientModel):
         readonly=True,
     )
 
-    def _get_company_logo_html(self):
+    def _render_with_layout(self, body_html):
         self.ensure_one()
-        company = self.company_id
-        logo_value = False
-        if "logo" in company._fields:
-            logo_value = company.logo
-        elif "image_1920" in company._fields:
-            logo_value = company.image_1920
-
-        if not logo_value:
-            return ""
-
-        alt_text = escape(company.name or "Company Logo")
-        return (
-            f'<img src="{image_data_uri(logo_value)}" alt="{alt_text}" '
-            'style="max-height:52px;max-width:200px;display:block;" />'
+        template = self.template_id
+        template_ctx = {
+            "message": self.env["mail.message"].sudo().new(
+                {"body": body_html or "", "record_name": template.name or ""}
+            ),
+            "subtype": self.env["mail.message.subtype"].sudo(),
+            "model_description": template.model_id.display_name
+            if template.model_id
+            else (template.model or ""),
+            "record": self.company_id,
+            "record_name": False,
+            "subtitles": False,
+            "company": self.company_id,
+            "email_add_signature": False,
+            "signature": "",
+            "website_url": "",
+            "is_html_empty": is_html_empty,
+            "email_notification_allow_header": True,
+            "email_notification_force_header": True,
+            "email_notification_allow_footer": True,
+            "email_notification_force_footer": True,
+        }
+        rendered = self.env["ir.qweb"]._render(
+            BRAND_LAYOUT_XMLID,
+            template_ctx,
+            minimal_qcontext=True,
+            raise_if_not_found=False,
         )
-
-    def _build_branded_body(self, current_body):
-        self.ensure_one()
-        company = self.company_id
-        primary_color = company.brand_primary_color or DEFAULT_PRIMARY_COLOR
-        secondary_color = company.brand_secondary_color or DEFAULT_SECONDARY_COLOR
-        header_text = escape(company.name or "")
-        footer_html = company.brand_footer_text or ""
-        legal_html = company.brand_legal_text or ""
-        logo_html = self._get_company_logo_html()
-
-        return (
-            '<div data-brand-kit-manager-preview="1" style="font-family:Arial,Helvetica,sans-serif;'
-            f'border:1px solid {secondary_color};border-radius:8px;overflow:hidden;">'
-            f'<div style="background:{primary_color};color:#ffffff;padding:16px;">'
-            f'{logo_html}<div style="margin-top:8px;font-size:16px;font-weight:600;">{header_text}</div>'
-            f"</div>"
-            f'<div style="padding:20px;background:#ffffff;">{current_body}</div>'
-            f'<div style="padding:16px;background:{secondary_color};font-size:13px;">'
-            f"{footer_html}"
-            f'<div style="margin-top:8px;opacity:0.8;">{legal_html}</div>'
-            f"</div>"
-            f"</div>"
-        )
+        if not rendered:
+            return body_html
+        return self.env["mail.render.mixin"]._replace_local_links(rendered)
 
     @api.depends(
         "template_id",
@@ -91,4 +80,4 @@ class CompanyEmailLayoutPreviewWizard(models.TransientModel):
         for wizard in self:
             body_html = wizard.template_id.body_html or ""
             wizard.current_body_html = body_html
-            wizard.preview_body_html = wizard._build_branded_body(body_html) if body_html else ""
+            wizard.preview_body_html = wizard._render_with_layout(body_html) if body_html else ""

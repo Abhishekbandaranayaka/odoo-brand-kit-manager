@@ -1,0 +1,84 @@
+<odoo>
+    <data>
+        <template
+            id="mail_notification_layout_brand_kit"
+            name="Mail: Brand Kit Notification Layout"
+            inherit_id="mail.mail_notification_layout"
+            primary="True"
+        >
+            <xpath expr="//t[@t-set='show_footer']" position="after">
+                <t
+                    t-set="brand_primary_color"
+                    t-value="(company.brand_kit_id and company.brand_kit_id.primary_color) or company.brand_primary_color or company.email_secondary_color or '#875A7B'"
+                />
+                <t
+                    t-set="brand_secondary_color"
+                    t-value="(company.brand_kit_id and company.brand_kit_id.secondary_color) or company.brand_secondary_color or '#F4F6FA'"
+                />
+                <t
+                    t-set="brand_footer_text"
+                    t-value="(company.brand_kit_id and company.brand_kit_id.footer_text) or company.brand_footer_text or ''"
+                />
+                <t
+                    t-set="brand_legal_text"
+                    t-value="(company.brand_kit_id and company.brand_kit_id.legal_text) or company.brand_legal_text or ''"
+                />
+            </xpath>
+
+            <xpath expr="//div[@style='max-width: 900px; width: 100%;']" position="attributes">
+                <attribute
+                    name="t-att-style"
+                >'max-width: 900px; width: 100%; border:1px solid %s; border-radius:8px; overflow:hidden; background:#FFFFFF;' % (brand_secondary_color)</attribute>
+            </xpath>
+
+            <xpath expr="//td[@t-if='has_button_access' and contains(@t-att-style, 'border-radius')]" position="attributes">
+                <attribute
+                    name="t-att-style"
+                >'border-radius: 3px; text-align: center; background: ' + (brand_primary_color or '#875A7B') + ';'</attribute>
+            </xpath>
+
+            <xpath expr="(//div[@t-if='show_footer'])[1]" position="replace">
+                <div t-if="show_footer" style="margin-top:16px;">
+                    <hr
+                        width="100%"
+                        style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;"
+                    />
+                    <div
+                        t-if="brand_footer_text"
+                        t-out="brand_footer_text"
+                        style="font-size:12px; color:#666666; margin-top:6px; margin-bottom:8px;"
+                    />
+                    <div
+                        t-if="brand_legal_text"
+                        t-out="brand_legal_text"
+                        style="font-size:11px; color:#888888; margin-bottom:8px;"
+                    />
+                    <b t-out="company.name" style="font-size:11px;" />
+                    <br />
+                    <p style="color: #999999; margin-top:2px; font-size:11px;">
+                        <t t-out="company.phone" />
+                        <t t-if="company.email and company.phone"> |</t>
+                        <a
+                            t-if="company.email"
+                            t-att-href="'mailto:%s' % company.email"
+                            style="text-decoration:none; color: #999999;"
+                            t-out="company.email"
+                        />
+                        <t t-if="company.website and (company.phone or company.email)"> |</t>
+                        <a
+                            t-if="company.website"
+                            t-att-href="'%s' % company.website"
+                            style="text-decoration:none; color: #999999;"
+                            t-out="company.website"
+                        />
+                    </p>
+                </div>
+            </xpath>
+
+            <xpath expr="(//div[@t-if='show_footer'])[2]/a" position="attributes">
+                <attribute name="t-att-style">'color: ' + (brand_primary_color or '#875A7B') + ';'</attribute>
+            </xpath>
+        </template>
+    </data>
+</odoo>
+

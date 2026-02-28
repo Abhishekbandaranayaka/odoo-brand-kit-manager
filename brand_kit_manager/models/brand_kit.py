@@ -1,17 +1,10 @@
-import re
-
-from markupsafe import escape
-
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import image_data_uri
+from odoo.tools import is_html_empty
 
 
 NEW_REFERENCE = "New"
-BRAND_KIT_START = "<!-- BRAND_KIT_MANAGER_START -->"
-BRAND_KIT_END = "<!-- BRAND_KIT_MANAGER_END -->"
-DEFAULT_PRIMARY_COLOR = "#0B5FFF"
-DEFAULT_SECONDARY_COLOR = "#F4F6FA"
+BRAND_LAYOUT_XMLID = "brand_kit_manager.mail_notification_layout_brand_kit"
 
 
 class BrandKit(models.Model):
@@ -49,7 +42,7 @@ class BrandKit(models.Model):
         "template_id",
         string="Templates To Apply",
         domain=[("model_id", "!=", False)],
-        help="Only selected templates are updated when you click Apply.",
+        help="Only selected templates are assigned to the Brand Kit email layout.",
     )
     note = fields.Text(string="Internal Notes")
     active = fields.Boolean(default=True, tracking=True)
@@ -107,7 +100,10 @@ class BrandKit(models.Model):
                     {
                         "template_id": template.id,
                         "current_body_html": current_body,
-                        "preview_body_html": self._build_branded_body(current_body),
+                        "preview_body_html": self._render_template_with_layout(
+                            template,
+                            current_body,
+                        ),
                     },
                 )
             )
@@ -137,20 +133,39 @@ class BrandKit(models.Model):
         if not self.template_ids:
             raise UserError(_("Select at least one template to apply changes."))
 
-        updated_count = self._apply_to_templates(self.template_ids)
+        self._sync_company_brand_fields()
+        updated_count = self._apply_layout_to_templates(self.template_ids)
         return self._display_notification(
             _("Brand Kit Applied"),
-            _("Updated %s template(s).") % updated_count,
+            _("Assigned branded layout to %s template(s).") % updated_count,
         )
 
-    def _apply_to_templates(self, templates):
+    def _sync_company_brand_fields(self):
         self.ensure_one()
+        company_values = {}
+        if self.primary_color:
+            company_values["brand_primary_color"] = self.primary_color
+        if self.secondary_color:
+            company_values["brand_secondary_color"] = self.secondary_color
+        if self.footer_text:
+            company_values["brand_footer_text"] = self.footer_text
+        if self.legal_text:
+            company_values["brand_legal_text"] = self.legal_text
+
+        if company_values:
+            self.company_id.write(company_values)
+
+    def _apply_layout_to_templates(self, templates):
+        self.ensure_one()
+        if "email_layout_xmlid" not in self.env["mail.template"]._fields:
+            raise UserError(
+                _("This Odoo version does not support assigning email layouts to templates.")
+            )
+
         updated_count = 0
         for template in templates:
-            current_body = template.body_html or ""
-            new_body = self._build_branded_body(current_body)
-            if new_body != current_body:
-                template.write({"body_html": new_body})
+            if template.email_layout_xmlid != BRAND_LAYOUT_XMLID:
+                template.write({"email_layout_xmlid": BRAND_LAYOUT_XMLID})
                 updated_count += 1
         return updated_count
 
@@ -170,57 +185,41 @@ class BrandKit(models.Model):
                 templates |= record
         return templates
 
-    def _build_branded_body(self, current_body):
+    def _render_template_with_layout(self, template, current_body):
         self.ensure_one()
-        base_body = self._strip_existing_brand_kit_wrapper(current_body)
-        primary_color = self.primary_color or DEFAULT_PRIMARY_COLOR
-        secondary_color = self.secondary_color or DEFAULT_SECONDARY_COLOR
-        header_text = escape(self.email_header_text or "")
-        footer_html = self.footer_text or ""
-        legal_html = self.legal_text or ""
-        logo_html = self._get_logo_html()
-
-        return (
-            f"{BRAND_KIT_START}"
-            f'<div data-brand-kit-manager="1" style="font-family:Arial,Helvetica,sans-serif;'
-            f'border:1px solid {secondary_color};border-radius:8px;overflow:hidden;">'
-            f'<div style="background:{primary_color};color:#ffffff;padding:16px;">'
-            f'{logo_html}<div style="margin-top:8px;font-size:16px;font-weight:600;">{header_text}</div>'
-            f"</div>"
-            f'<div style="padding:20px;background:#ffffff;">{base_body}</div>'
-            f'<div style="padding:16px;background:{secondary_color};font-size:13px;">'
-            f"{footer_html}"
-            f'<div style="margin-top:8px;opacity:0.8;">{legal_html}</div>'
-            f"</div>"
-            f"</div>"
-            f"{BRAND_KIT_END}"
+        template_ctx = {
+            "message": self.env["mail.message"].sudo().new(
+                {
+                    "body": current_body or "",
+                    "record_name": template.name or self.name,
+                }
+            ),
+            "subtype": self.env["mail.message.subtype"].sudo(),
+            "model_description": template.model_id.display_name
+            if template.model_id
+            else (template.model or ""),
+            "record": self.company_id,
+            "record_name": False,
+            "subtitles": False,
+            "company": self.company_id,
+            "email_add_signature": False,
+            "signature": "",
+            "website_url": "",
+            "is_html_empty": is_html_empty,
+            "email_notification_allow_header": True,
+            "email_notification_force_header": True,
+            "email_notification_allow_footer": True,
+            "email_notification_force_footer": True,
+        }
+        rendered = self.env["ir.qweb"]._render(
+            BRAND_LAYOUT_XMLID,
+            template_ctx,
+            minimal_qcontext=True,
+            raise_if_not_found=False,
         )
-
-    def _strip_existing_brand_kit_wrapper(self, body_html):
-        body_html = body_html or ""
-        pattern = re.compile(
-            re.escape(BRAND_KIT_START) + r".*?" + re.escape(BRAND_KIT_END),
-            flags=re.S,
-        )
-        return re.sub(pattern, "", body_html).strip()
-
-    def _get_logo_html(self):
-        self.ensure_one()
-        logo_value = self.logo
-        if not logo_value:
-            if "logo" in self.company_id._fields:
-                logo_value = self.company_id.logo
-            elif "image_1920" in self.company_id._fields:
-                logo_value = self.company_id.image_1920
-
-        if not logo_value:
-            return ""
-
-        alt_text = escape(self.name or "Brand Logo")
-        return (
-            f'<img src="{image_data_uri(logo_value)}" alt="{alt_text}" '
-            'style="max-height:52px;max-width:200px;display:block;" />'
-        )
+        if not rendered:
+            return current_body
+        return self.env["mail.render.mixin"]._replace_local_links(rendered)
 
     def _display_notification(self, title, message):
         return {

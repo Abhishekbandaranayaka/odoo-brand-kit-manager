@@ -11,6 +11,7 @@
         "security/ir.model.access.csv",
         "data/brand_kit_sequence.xml",
         "data/default_brand_kit.xml",
+        "data/mail_notification_layout_brand_kit.xml",
         "views/brand_kit_views.xml",
         "views/brand_kit_preview_wizard_views.xml",
         "views/res_config_settings_views.xml",
