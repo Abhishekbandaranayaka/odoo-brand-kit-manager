@@ -1,3 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_brand_kit_user,access.brand.kit.user,model_brand_kit,base.group_user,1,1,1,1
-
+access_brand_kit_preview_wizard_user,access.brand.kit.preview.wizard.user,model_brand_kit_preview_wizard,base.group_user,1,1,1,1
+access_brand_kit_preview_wizard_line_user,access.brand.kit.preview.wizard.line.user,model_brand_kit_preview_wizard_line,base.group_user,1,1,1,1

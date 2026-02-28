@@ -7,6 +7,7 @@
                 <field name="name" />
                 <field name="code" />
                 <field name="company_id" />
+                <field name="email_header_text" />
                 <field name="active" />
             </tree>
         </field>
@@ -17,6 +18,29 @@
         <field name="model">brand.kit</field>
         <field name="arch" type="xml">
             <form string="Brand Kit">
+                <header>
+                    <button
+                        name="action_load_recommended_templates"
+                        string="Load Common Templates"
+                        type="object"
+                        class="btn-secondary"
+                        groups="base.group_system"
+                    />
+                    <button
+                        name="action_preview"
+                        string="Preview"
+                        type="object"
+                        class="btn-secondary"
+                        groups="base.group_system"
+                    />
+                    <button
+                        name="action_apply_to_email_templates"
+                        string="Apply to Email Templates"
+                        type="object"
+                        class="btn-primary"
+                        groups="base.group_system"
+                    />
+                </header>
                 <sheet>
                     <div class="oe_title">
                         <label for="name" />
@@ -29,20 +53,32 @@
                         <group>
                             <field name="code" readonly="1" />
                             <field name="company_id" />
+                            <field name="email_header_text" />
                             <field name="active" />
                         </group>
                         <group>
                             <field name="primary_color" placeholder="#0057B8" />
                             <field name="secondary_color" placeholder="#FFD700" />
-                            <field name="font_family" placeholder="Montserrat" />
                         </group>
                     </group>
 
                     <group>
-                        <field name="logo" filename="name" />
+                        <field name="logo" widget="image" class="oe_avatar" />
                     </group>
 
                     <notebook>
+                        <page string="Email Content">
+                            <group>
+                                <field name="footer_text" widget="html" />
+                                <field name="legal_text" widget="html" />
+                            </group>
+                        </page>
+                        <page string="Email Templates" groups="base.group_system">
+                            <label
+                                string="Choose templates to update. Only selected templates are modified when you click Apply."
+                            />
+                            <field name="template_ids" widget="many2many_checkboxes" />
+                        </page>
                         <page string="Notes">
                             <field name="note" />
                         </page>
@@ -61,6 +97,7 @@
                 <field name="name" />
                 <field name="code" />
                 <field name="company_id" />
+                <field name="template_ids" />
                 <filter string="Archived" name="archived" domain="[('active', '=', False)]" />
             </search>
         </field>

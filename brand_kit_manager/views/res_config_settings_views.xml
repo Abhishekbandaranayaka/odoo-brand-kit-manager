@@ -12,7 +12,11 @@
                             string="Default Brand Kit"
                             help="Pick the default brand kit for the current company."
                         >
-                            <field name="brand_kit_id" options="{'no_create_edit': True}" />
+                            <field
+                                name="brand_kit_id"
+                                domain="[('company_id', 'in', [False, company_id])]"
+                                options="{'no_create_edit': True}"
+                            />
                         </setting>
                     </block>
                 </app>
@@ -20,4 +24,3 @@
         </field>
     </record>
 </odoo>
-
