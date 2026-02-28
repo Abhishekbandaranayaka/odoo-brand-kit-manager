@@ -3,7 +3,7 @@
     "summary": "Manage company brand kits from a dedicated module",
     "version": "19.0.1.0.0",
     "category": "Tools",
-    "author": "Your Company",
+    "author": "Mr.Abhi",
     "license": "LGPL-3",
     "price": 35.0,
     "currency": "USD",
