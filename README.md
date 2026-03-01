@@ -1,25 +1,33 @@
-# Odoo Custom Module Foundation
+# Brand Kit Manager (Odoo 19)
 
-This repository contains a starter structure for custom Odoo development.
+`brand_kit_manager` is an Odoo 19 module for unified email branding.
 
-## Project Structure
+## Features
 
-- `brand_kit_manager`: starter custom module
-- `config/odoo.conf.example`: example Odoo config for local development
+- Brand kit per company (`brand.kit`): logo, primary/secondary color, header text, footer text, legal text.
+- Preview wizard before applying changes.
+- Safe apply flow that sets branded layout without hard-overwriting template bodies.
+- Settings integration and company-level default brand kit.
+- Administration-only management permissions.
 
-## Quick Start
+## Repository Structure
 
-1. Ensure Odoo and PostgreSQL are installed.
-2. Copy `config/odoo.conf.example` to `config/odoo.conf` and adjust values.
-3. Start Odoo with that config.
-4. In Odoo UI, update Apps list and install `Brand Kit Manager`.
+- `brand_kit_manager/`: module source
+- `brand_kit_manager/static/description/`: Odoo Apps listing assets
+- `config/odoo.conf.example`: local configuration sample
 
-## Module Included
+## Odoo Apps Listing Assets
 
-The `brand_kit_manager` module includes:
+Cover images are included for Odoo Apps scan:
 
-- A starter model: `brand.kit`
-- Basic menu and action
-- Tree, form, and search views
-- Access rights for internal users
-- A sequence for auto-generated references
+- `brand_kit_manager/static/description/thumbnail.png`
+- `brand_kit_manager/static/description/banner.png`
+- `brand_kit_manager/static/description/screenshots/brand_kit_manager_cover.png`
+
+## Local Run
+
+1. Ensure Odoo 19 and PostgreSQL are installed.
+2. Put this repository path in `addons_path`.
+3. Upgrade/install module:
+   - `odoo-bin -c odoo.conf -d <db_name> -u brand_kit_manager`
+4. Open Apps, update app list, and test Brand Kit flows.

@@ -1,12 +1,20 @@
 {
     "name": "Brand Kit Manager",
-    "summary": "Manage company brand kits from a dedicated module",
-    "version": "19.0.1.0.0",
+    "summary": "Unified email branding with logo, colors, footer, and legal text",
+    "version": "19.0.1.1.0",
     "category": "Tools",
     "author": "Mr.Abhi",
+    "maintainer": "Mr.Abhi",
+    "website": "https://github.com/Abhishekbandaranayaka/odoo-brand-kit-manager",
+    "support": "info.ajconsulting.zynolo@gmail.com",
     "license": "LGPL-3",
     "price": 35.0,
     "currency": "USD",
+    "images": [
+        "static/description/banner.png",
+        "static/description/thumbnail.png",
+        "static/description/screenshots/brand_kit_manager_cover.png",
+    ],
     "depends": ["base", "mail", "base_setup"],
     "data": [
         "security/security.xml",
