@@ -5,8 +5,6 @@
     "category": "Tools",
     "author": "Mr.Abhi",
     "maintainer": "Mr.Abhi",
-    "website": "https://github.com/Abhishekbandaranayaka/odoo-brand-kit-manager",
-    "support": "info.ajconsulting.zynolo@gmail.com",
     "license": "LGPL-3",
     "price": 35.0,
     "currency": "USD",
