@@ -7,6 +7,11 @@
     "license": "LGPL-3",
     "price": 35.0,
     "currency": "USD",
+    "images": [
+        "static/description/banner.png",
+        "static/description/thumbnail.png",
+        "static/description/screenshots/brand_kit_manager_cover.png",
+    ],
     "depends": ["base", "mail", "base_setup"],
     "data": [
         "security/security.xml",
