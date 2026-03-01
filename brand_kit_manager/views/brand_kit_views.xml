@@ -1,0 +1,126 @@
+<odoo>
+    <record id="view_brand_kit_tree" model="ir.ui.view">
+        <field name="name">brand.kit.tree</field>
+        <field name="model">brand.kit</field>
+        <field name="arch" type="xml">
+            <list string="Brand Kits">
+                <field name="name" />
+                <field name="code" />
+                <field name="company_id" />
+                <field name="email_header_text" />
+                <field name="active" />
+            </list>
+        </field>
+    </record>
+
+    <record id="view_brand_kit_form" model="ir.ui.view">
+        <field name="name">brand.kit.form</field>
+        <field name="model">brand.kit</field>
+        <field name="arch" type="xml">
+            <form string="Brand Kit">
+                <header>
+                    <button
+                        name="action_load_recommended_templates"
+                        string="Load Common Templates"
+                        type="object"
+                        class="btn-secondary"
+                        groups="base.group_system"
+                    />
+                    <button
+                        name="action_preview"
+                        string="Preview"
+                        type="object"
+                        class="btn-secondary"
+                        groups="base.group_system"
+                    />
+                    <button
+                        name="action_apply_to_email_templates"
+                        string="Apply to Email Templates"
+                        type="object"
+                        class="btn-primary"
+                        groups="base.group_system"
+                    />
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" />
+                        <h1>
+                            <field name="name" />
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="code" readonly="1" />
+                            <field name="company_id" />
+                            <field name="email_header_text" />
+                            <field name="active" />
+                        </group>
+                        <group>
+                            <field name="primary_color" placeholder="#0057B8" />
+                            <field name="secondary_color" placeholder="#FFD700" />
+                        </group>
+                    </group>
+
+                    <group>
+                        <field name="logo" widget="image" class="oe_avatar" />
+                    </group>
+
+                    <notebook>
+                        <page string="Email Content">
+                            <group>
+                                <field name="footer_text" widget="html" />
+                                <field name="legal_text" widget="html" />
+                            </group>
+                        </page>
+                        <page string="Email Templates" groups="base.group_system">
+                            <div class="o_form_label">
+                                Choose templates to apply. Clicking Apply assigns the branded email layout
+                                without overwriting template body HTML.
+                            </div>
+                            <field name="template_ids" widget="many2many_checkboxes" />
+                        </page>
+                        <page string="Notes">
+                            <field name="note" />
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter />
+            </form>
+        </field>
+    </record>
+
+    <record id="view_brand_kit_search" model="ir.ui.view">
+        <field name="name">brand.kit.search</field>
+        <field name="model">brand.kit</field>
+        <field name="arch" type="xml">
+            <search string="Search Brand Kits">
+                <field name="name" />
+                <field name="code" />
+                <field name="company_id" />
+                <field name="template_ids" />
+                <filter string="Archived" name="archived" domain="[('active', '=', False)]" />
+            </search>
+        </field>
+    </record>
+
+    <record id="action_brand_kit" model="ir.actions.act_window">
+        <field name="name">Brand Kits</field>
+        <field name="res_model">brand.kit</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_brand_kit_search" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create your first brand kit.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_brand_kit_root" name="Brand Kit" sequence="10" groups="base.group_system" />
+    <menuitem
+        id="menu_brand_kit"
+        name="Brand Kits"
+        parent="menu_brand_kit_root"
+        action="action_brand_kit"
+        sequence="10"
+        groups="base.group_system"
+    />
+</odoo>

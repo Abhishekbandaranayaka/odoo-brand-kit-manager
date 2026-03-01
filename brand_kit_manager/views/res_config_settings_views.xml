@@ -1,0 +1,76 @@
+<odoo>
+    <record id="res_config_settings_view_form_brand_kit" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.brand.kit</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app string="Brand Kit" name="brand_kit_manager" groups="base.group_system">
+                    <block title="Company Brand Settings">
+                        <setting
+                            id="brand_kit_primary_color_setting"
+                            string="Primary Color"
+                            help="Primary brand color for the current company."
+                        >
+                            <field name="brand_primary_color" placeholder="#0B5FFF" />
+                        </setting>
+                        <setting
+                            id="brand_kit_secondary_color_setting"
+                            string="Secondary Color"
+                            help="Secondary brand color for the current company."
+                        >
+                            <field name="brand_secondary_color" placeholder="#F4F6FA" />
+                        </setting>
+                        <setting
+                            id="brand_kit_footer_text_setting"
+                            string="Footer Text"
+                            help="Footer content inserted into branded emails."
+                        >
+                            <field name="brand_footer_text" widget="html" />
+                        </setting>
+                        <setting
+                            id="brand_kit_legal_text_setting"
+                            string="Legal Text"
+                            help="Legal or disclaimer content inserted into branded emails."
+                        >
+                            <field name="brand_legal_text" widget="html" />
+                        </setting>
+                        <setting
+                            id="brand_kit_header_text_setting"
+                            string="Header Text"
+                            help="Short text shown next to logo in branded email header."
+                        >
+                            <field name="brand_email_header_text" placeholder="Trusted by YourCompany" />
+                        </setting>
+                        <setting
+                            id="brand_kit_preview_email_layout_setting"
+                            string="Preview Email Layout"
+                            help="Preview one selected email template with current company brand settings."
+                        >
+                            <button
+                                name="action_open_email_layout_preview"
+                                string="Open Preview Wizard"
+                                type="object"
+                                class="btn-secondary"
+                            />
+                        </setting>
+                    </block>
+
+                    <block title="Brand Kit (Optional)">
+                        <setting
+                            id="brand_kit_default_brand_kit_setting"
+                            string="Default Brand Kit"
+                            help="Pick the default brand kit for the current company."
+                        >
+                            <field
+                                name="brand_kit_id"
+                                domain="[('company_id', 'in', [False, company_id])]"
+                                options="{'no_create_edit': True}"
+                            />
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+</odoo>

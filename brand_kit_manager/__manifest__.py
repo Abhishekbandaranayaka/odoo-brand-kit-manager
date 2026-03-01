@@ -1,0 +1,23 @@
+{
+    "name": "Brand Kit Manager",
+    "summary": "Manage company brand kits from a dedicated module",
+    "version": "18.0.1.0.0",
+    "category": "Tools",
+    "author": "Mr.Abhi",
+    "license": "LGPL-3",
+    "price": 35.0,
+    "currency": "USD",
+    "depends": ["base", "mail", "base_setup"],
+    "data": [
+        "security/security.xml",
+        "security/ir.model.access.csv",
+        "data/brand_kit_sequence.xml",
+        "data/default_brand_kit.xml",
+        "data/mail_notification_layout_brand_kit.xml",
+        "views/brand_kit_views.xml",
+        "views/brand_kit_preview_wizard_views.xml",
+        "views/res_config_settings_views.xml",
+    ],
+    "installable": True,
+    "application": True,
+}
